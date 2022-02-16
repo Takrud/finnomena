@@ -21,11 +21,10 @@ func main() {
 	fmt.Println("============================================================")
 
 	os.Setenv("GATEWAY_API", "https://storage.googleapis.com/finno-ex-re-v2-static-staging/recruitment-test/fund-ranking-1Y.json")
-	
+
 	//Init Core Entity
 	coreEntity.InitCoreEntity(coreThirdParty.NewEntity())
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	job.GetFundRank(ctx, time.Now().Format("2006-01-02"), inputRange)
 }
-

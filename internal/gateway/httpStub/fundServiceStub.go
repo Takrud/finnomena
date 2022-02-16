@@ -2,9 +2,9 @@ package httpStub
 
 import (
 	"context"
+	"finno/internal/controller/job/model"
 	"fmt"
 	"time"
-	"finno/internal/controller/job/model"
 )
 
 type Response struct {
@@ -29,13 +29,13 @@ func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.
 	}
 	fundList := []model.Fund{}
 	for _, i := range res.Data {
-		if i.UpdatedDate.After(startDate) {
+		if !i.UpdatedDate.Before(startDate) {
 			fundList = append(fundList, model.Fund{
-				Name: i.Name,
-				RankOfFund: i.RankOfFund,
+				Name:        i.Name,
+				RankOfFund:  i.RankOfFund,
 				UpdatedDate: i.UpdatedDate,
 				Performance: i.Performance,
-				Price: i.Price,
+				Price:       i.Price,
 			})
 		}
 	}
@@ -43,25 +43,25 @@ func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.
 	return fundList
 }
 
-func fund()(stub map[string]Response) {
+func fund() (stub map[string]Response) {
 	stub = map[string]Response{}
 	{
 		rs := Response{}
 		rs.Status = true
 		fund := []model.Fund{}
 		fund = append(fund, model.Fund{
-			Name: "SCBKEQTGE",
-			RankOfFund: 22.149986,
+			Name:        "SCBKEQTGE",
+			RankOfFund:  22.149986,
 			UpdatedDate: time.Date(2021, 9, 6, 0, 0, 0, 0, time.UTC),
 			Performance: 39.434631,
-			Price: 13.607800,
+			Price:       13.607800,
 		})
 		fund = append(fund, model.Fund{
-			Name: "MBT-G",
-			RankOfFund: 19.821329,
+			Name:        "MBT-G",
+			RankOfFund:  19.821329,
 			UpdatedDate: time.Date(2021, 9, 7, 0, 0, 0, 0, time.UTC),
 			Performance: 39.210892,
-			Price: 25.266600,
+			Price:       25.266600,
 		})
 		rs.Data = fund
 		stub["2022-02-04"] = rs
@@ -72,25 +72,25 @@ func fund()(stub map[string]Response) {
 		rs.Status = true
 		fund := []model.Fund{}
 		fund = append(fund, model.Fund{
-			Name: "SCBKEQTGE",
-			RankOfFund: 22.149986,
+			Name:        "SCBKEQTGE",
+			RankOfFund:  22.149986,
 			UpdatedDate: time.Date(2021, 9, 6, 0, 0, 0, 0, time.UTC),
 			Performance: 39.434631,
-			Price: 13.607800,
+			Price:       13.607800,
 		})
 		fund = append(fund, model.Fund{
-			Name: "MBT-G",
-			RankOfFund: 19.821329,
+			Name:        "MBT-G",
+			RankOfFund:  19.821329,
 			UpdatedDate: time.Date(2021, 8, 7, 0, 0, 0, 0, time.UTC),
 			Performance: 39.210892,
-			Price: 25.266600,
+			Price:       25.266600,
 		})
 		fund = append(fund, model.Fund{
-			Name: "ASP-SME-SSF",
-			RankOfFund: 38.081154,
+			Name:        "ASP-SME-SSF",
+			RankOfFund:  38.081154,
 			UpdatedDate: time.Date(2021, 8, 7, 0, 0, 0, 0, time.UTC),
 			Performance: 38.703129,
-			Price: 16.048300,
+			Price:       16.048300,
 		})
 		rs.Data = fund
 		stub["2021-10-05"] = rs
@@ -101,25 +101,32 @@ func fund()(stub map[string]Response) {
 		rs.Status = true
 		fund := []model.Fund{}
 		fund = append(fund, model.Fund{
-			Name: "SCBKEQTGE",
-			RankOfFund: 22.149986,
+			Name:        "SCBKEQTGE",
+			RankOfFund:  22.149986,
 			UpdatedDate: time.Date(2021, 9, 6, 0, 0, 0, 0, time.UTC),
 			Performance: 39.434631,
-			Price: 13.607800,
+			Price:       13.607800,
 		})
 		fund = append(fund, model.Fund{
-			Name: "MBT-G",
-			RankOfFund: 19.821329,
+			Name:        "MBT-G",
+			RankOfFund:  19.821329,
 			UpdatedDate: time.Date(2021, 9, 7, 0, 0, 0, 0, time.UTC),
 			Performance: 39.210892,
-			Price: 25.266600,
+			Price:       25.266600,
 		})
 		fund = append(fund, model.Fund{
-			Name: "ASP-SME-SSF",
-			RankOfFund: 38.081154,
+			Name:        "ASP-SME-SSF",
+			RankOfFund:  38.081154,
 			UpdatedDate: time.Date(2021, 9, 8, 0, 0, 0, 0, time.UTC),
 			Performance: 38.703129,
-			Price: 16.048300,
+			Price:       16.048300,
+		})
+		fund = append(fund, model.Fund{
+			Name:        "KT-WTAI-A",
+			RankOfFund:  28.829454,
+			UpdatedDate: time.Date(2021, 9, 14, 0, 0, 0, 0, time.UTC),
+			Performance: 39.315048,
+			Price:       21.254601,
 		})
 		rs.Data = fund
 		stub["2021-09-15"] = rs

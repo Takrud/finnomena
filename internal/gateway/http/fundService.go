@@ -3,12 +3,12 @@ package http
 import (
 	"context"
 	"encoding/json"
+	"finno/internal/controller/job/model"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
-	"finno/internal/controller/job/model"
 )
 
 type Response struct {
@@ -30,18 +30,18 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 	url, ok := os.LookupEnv("GATEWAY_API")
 	if !ok {
 		panic("GATEWAY_API not set")
-	} 
-	
+	}
+
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println("The HTTP request failed with error ", err)
 		panic(err)
 	}
 
-    fmt.Println(response)
+	fmt.Println(response)
 
 	data, _ := ioutil.ReadAll(response.Body)
-    //fmt.Println(string(data))
+	//fmt.Println(string(data))
 
 	rs := Response{}
 	err = json.Unmarshal(data, &rs)
@@ -57,13 +57,13 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 
 	fundList := []model.Fund{}
 	for _, i := range rs.Data {
-		if i.UpdatedDate.After(startDate) {
+		if !i.UpdatedDate.Before(startDate) {
 			fundList = append(fundList, model.Fund{
-				Name: i.Name,
-				RankOfFund: i.RankOfFund,
+				Name:        i.Name,
+				RankOfFund:  i.RankOfFund,
 				UpdatedDate: i.UpdatedDate,
 				Performance: i.Performance,
-				Price: i.Price,
+				Price:       i.Price,
 			})
 		}
 	}

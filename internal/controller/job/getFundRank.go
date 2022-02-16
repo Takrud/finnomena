@@ -14,26 +14,27 @@ func GetFundRank(ctx context.Context, date string, timeRange string) []model.Fun
 	if err != nil {
 		panic(err)
 	}
-	firstDate := FindStartDateFromRange(timeRange, endDate)
+	firstDate := FindStartDateFromRange(endDate, timeRange)
 	listOfFunds := coreEntity.Entity().ThirdParty.HTTPFundService.GetFundRanking(ctx, firstDate, endDate)
 	for _, i := range listOfFunds {
+		fmt.Println("===============================================================")
 		fmt.Printf("Name: %s\nRank Of Fund: %f\nUpdated Date: %s\nPerformance: %f\nPrice: %f\n", i.Name, i.RankOfFund, i.UpdatedDate.String(), i.Performance, i.Price)
 	}
-
+	fmt.Println("===============================================================")
 	return listOfFunds
 }
 
-func FindStartDateFromRange(timeRange string, startDate time.Time) time.Time {
-	var endDate = time.Time{}
+func FindStartDateFromRange(endDate time.Time, timeRange string) time.Time {
+	var startDate = time.Time{}
 	switch timeRange {
 	case "1Y":
-		endDate = time.Date(startDate.Year()-1, startDate.Month(), startDate.Day()-1, 0, 0, 0, 0, time.UTC)
+		startDate = time.Date(endDate.Year()-1, endDate.Month(), endDate.Day()-1, 0, 0, 0, 0, time.UTC)
 	case "1M":
-		endDate = time.Date(startDate.Year(), startDate.Month()-1, startDate.Day()-1, 0, 0, 0, 0, time.UTC)
+		startDate = time.Date(endDate.Year(), endDate.Month()-1, endDate.Day()-1, 0, 0, 0, 0, time.UTC)
 	case "1W":
-		endDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day()-7, 0, 0, 0, 0, time.UTC)
+		startDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day()-7, 0, 0, 0, 0, time.UTC)
 	case "1D":
-		endDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day()-2, 0, 0, 0, 0, time.UTC)
+		startDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day()-1, 0, 0, 0, 0, time.UTC)
 	}
-	return endDate
+	return startDate
 }

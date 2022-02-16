@@ -5,7 +5,5 @@ import (
 )
 
 type ThirdParty struct {
-	HTTPFundService   repo.HTTPFundService
+	HTTPFundService repo.HTTPFundService
 }
-
-
