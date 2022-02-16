@@ -4,6 +4,7 @@ import (
 	"context"
 	"finno/internal/controller/job/model"
 	"fmt"
+	"sort"
 	"time"
 )
 
@@ -27,7 +28,7 @@ func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.
 	if res.Status != true {
 		fmt.Println("The HTTP response status is", res.Status)
 	}
-	fundList := []model.Fund{}
+	var fundList []model.Fund
 	for _, i := range res.Data {
 		if !i.UpdatedDate.Before(startDate) {
 			fundList = append(fundList, model.Fund{
@@ -40,6 +41,11 @@ func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.
 		}
 	}
 
+	if len(fundList) > 1 {
+		sort.Slice(fundList[:], func(i, j int) bool {
+			return fundList[i].Performance > fundList[j].Performance
+		})
+	}
 	return fundList
 }
 

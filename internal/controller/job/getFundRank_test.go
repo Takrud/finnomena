@@ -55,6 +55,14 @@ func TestGetFundRank(t *testing.T) {
 			},
 			expectedFund: expectedSuccess1D(),
 		},
+		{
+			name: "Success Case 1D with No Fund",
+			args: args{
+				inputDate: "2021-10-05",
+				timeRange: "1D",
+			},
+			expectedFund: expectedSuccess1DNoFund(),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -64,7 +72,6 @@ func TestGetFundRank(t *testing.T) {
 			coreEntity.InitCoreEntity(coreStub.NewStubEntity())
 			ctx := context.Background()
 			res := job.GetFundRank(ctx, tt.args.inputDate, tt.args.timeRange)
-
 			assert.Equal(t, len(tt.expectedFund), len(res))
 			for o, i := range res {
 				assert.Equal(t, tt.expectedFund[o].Name, i.Name)
@@ -111,18 +118,18 @@ func expectedSuccess1M() []model.Fund {
 func expectedSuccess1W() []model.Fund {
 	fundList := []model.Fund{}
 	fundList = append(fundList, model.Fund{
-		Name:        "ASP-SME-SSF",
-		RankOfFund:  38.081154,
-		UpdatedDate: time.Date(2021, 9, 8, 0, 0, 0, 0, time.UTC),
-		Performance: 38.703129,
-		Price:       16.048300,
-	})
-	fundList = append(fundList, model.Fund{
 		Name:        "KT-WTAI-A",
 		RankOfFund:  28.829454,
 		UpdatedDate: time.Date(2021, 9, 14, 0, 0, 0, 0, time.UTC),
 		Performance: 39.315048,
 		Price:       21.254601,
+	})
+	fundList = append(fundList, model.Fund{
+		Name:        "ASP-SME-SSF",
+		RankOfFund:  38.081154,
+		UpdatedDate: time.Date(2021, 9, 8, 0, 0, 0, 0, time.UTC),
+		Performance: 38.703129,
+		Price:       16.048300,
 	})
 	return fundList
 }
@@ -136,6 +143,11 @@ func expectedSuccess1D() []model.Fund {
 		Performance: 39.315048,
 		Price:       21.254601,
 	})
+	return fundList
+}
+
+func expectedSuccess1DNoFund() []model.Fund {
+	fundList := []model.Fund{}
 	return fundList
 }
 

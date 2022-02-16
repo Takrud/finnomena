@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"sort"
 	"time"
 )
 
@@ -55,7 +56,7 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 		panic(err)
 	}
 
-	fundList := []model.Fund{}
+	var fundList []model.Fund
 	for _, i := range rs.Data {
 		if !i.UpdatedDate.Before(startDate) {
 			fundList = append(fundList, model.Fund{
@@ -68,5 +69,10 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 		}
 	}
 
+	if len(fundList) > 1 {
+		sort.Slice(fundList[:], func(i, j int) bool {
+			return fundList[i].Performance > fundList[j].Performance
+		})
+	}
 	return fundList
 }

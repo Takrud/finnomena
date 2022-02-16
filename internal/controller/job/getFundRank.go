@@ -25,7 +25,7 @@ func GetFundRank(ctx context.Context, date string, timeRange string) []model.Fun
 }
 
 func FindStartDateFromRange(endDate time.Time, timeRange string) time.Time {
-	var startDate = time.Time{}
+	var startDate time.Time
 	switch timeRange {
 	case "1Y":
 		startDate = time.Date(endDate.Year()-1, endDate.Month(), endDate.Day()-1, 0, 0, 0, 0, time.UTC)
