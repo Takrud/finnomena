@@ -1,7 +1,7 @@
 package coreEntity
 
 import (
-	"finno/internal/controller/entities/repo"
+	"finnomena/internal/controller/entities/repo"
 )
 
 type ThirdParty struct {

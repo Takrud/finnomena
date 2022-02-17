@@ -2,10 +2,10 @@ package job_test
 
 import (
 	"context"
-	"finno/internal/controller/job"
-	"finno/internal/controller/job/model"
-	"finno/internal/core/coreEntity"
-	"finno/internal/core/coreEntity/coreStub"
+	"finnomena/internal/controller/job"
+	"finnomena/internal/controller/job/model"
+	"finnomena/internal/core/coreEntity"
+	"finnomena/internal/core/coreEntity/coreStub"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -22,6 +22,7 @@ func TestGetFundRank(t *testing.T) {
 		name         string
 		args         args
 		expectedFund []model.Fund
+		hasError     bool
 	}{
 		{
 			name: "Success Case 1Y",
@@ -30,6 +31,7 @@ func TestGetFundRank(t *testing.T) {
 				timeRange: "1Y",
 			},
 			expectedFund: expectedSuccess1Y(),
+			hasError:     false,
 		},
 		{
 			name: "Success Case 1M",
@@ -38,6 +40,7 @@ func TestGetFundRank(t *testing.T) {
 				timeRange: "1M",
 			},
 			expectedFund: expectedSuccess1M(),
+			hasError:     false,
 		},
 		{
 			name: "Success Case 1W",
@@ -46,6 +49,7 @@ func TestGetFundRank(t *testing.T) {
 				timeRange: "1W",
 			},
 			expectedFund: expectedSuccess1W(),
+			hasError:     false,
 		},
 		{
 			name: "Success Case 1D",
@@ -54,6 +58,7 @@ func TestGetFundRank(t *testing.T) {
 				timeRange: "1D",
 			},
 			expectedFund: expectedSuccess1D(),
+			hasError:     false,
 		},
 		{
 			name: "Success Case 1D with No Fund",
@@ -62,6 +67,16 @@ func TestGetFundRank(t *testing.T) {
 				timeRange: "1D",
 			},
 			expectedFund: expectedSuccess1DNoFund(),
+			hasError:     false,
+		},
+		{
+			name: "Failed Case 1D",
+			args: args{
+				inputDate: "2022-03-15",
+				timeRange: "1D",
+			},
+			expectedFund: expectedSuccess1D(),
+			hasError:     true,
 		},
 	}
 	for _, tt := range tests {
@@ -71,14 +86,21 @@ func TestGetFundRank(t *testing.T) {
 			os.Setenv("GATEWAY_API", "https://storage.googleapis.com/finno-ex-re-v2-static-staging/recruitment-test/fund-ranking-1Y.json")
 			coreEntity.InitCoreEntity(coreStub.NewStubEntity())
 			ctx := context.Background()
-			res := job.GetFundRank(ctx, tt.args.inputDate, tt.args.timeRange)
-			assert.Equal(t, len(tt.expectedFund), len(res))
-			for o, i := range res {
-				assert.Equal(t, tt.expectedFund[o].Name, i.Name)
-				assert.Equal(t, tt.expectedFund[o].RankOfFund, i.RankOfFund)
-				assert.Equal(t, tt.expectedFund[o].UpdatedDate, i.UpdatedDate)
-				assert.Equal(t, tt.expectedFund[o].Performance, i.Performance)
-				assert.Equal(t, tt.expectedFund[o].Price, i.Price)
+			res, err := job.GetFundRank(ctx, tt.args.inputDate, tt.args.timeRange)
+			if err != nil {
+				fmt.Println("Failed")
+				assert.Equal(t, tt.hasError, err!=nil)
+			} else {
+				fmt.Println("Success")
+				assert.Equal(t, tt.hasError, err!=nil)
+				assert.Equal(t, len(tt.expectedFund), len(res))
+				for o, i := range res {
+					assert.Equal(t, tt.expectedFund[o].Name, i.Name)
+					assert.Equal(t, tt.expectedFund[o].RankOfFund, i.RankOfFund)
+					assert.Equal(t, tt.expectedFund[o].UpdatedDate, i.UpdatedDate)
+					assert.Equal(t, tt.expectedFund[o].Performance, i.Performance)
+					assert.Equal(t, tt.expectedFund[o].Price, i.Price)
+				}
 			}
 		})
 	}

@@ -3,7 +3,8 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"finno/internal/controller/job/model"
+	"errors"
+	"finnomena/internal/controller/job/model"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -26,7 +27,7 @@ func NewHTTPGateway() *HTTPGateway {
 	return g
 }
 
-func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, endDate time.Time) []model.Fund {
+func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, endDate time.Time) ([]model.Fund, error) {
 
 	url, ok := os.LookupEnv("GATEWAY_API")
 	if !ok {
@@ -36,7 +37,7 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println("The HTTP request failed with error ", err)
-		panic(err)
+		return nil, err
 	}
 
 	fmt.Println(response)
@@ -53,7 +54,7 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 
 	if rs.Status != true {
 		fmt.Println("The HTTP response status is ", rs.Status)
-		panic(err)
+		return nil, errors.New("The HTTP response status is false.")
 	}
 
 	var fundList []model.Fund
@@ -71,8 +72,8 @@ func (g *HTTPGateway) GetFundRanking(ctx context.Context, startDate time.Time, e
 
 	if len(fundList) > 1 {
 		sort.Slice(fundList[:], func(i, j int) bool {
-			return fundList[i].Performance > fundList[j].Performance
+			return (fundList[i].Performance > fundList[j].Performance)
 		})
 	}
-	return fundList
+	return fundList, nil
 }

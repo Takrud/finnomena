@@ -1,9 +1,9 @@
 package coreThirdParty
 
 import (
-	"finno/internal/core/coreEntity"
-	"finno/internal/gateway/http"
-	"finno/internal/gateway/httpStub"
+	"finnomena/internal/core/coreEntity"
+	"finnomena/internal/gateway/http"
+	"finnomena/internal/gateway/httpStub"
 )
 
 func NewEntity() coreEntity.CoreEntity {

@@ -1,4 +1,4 @@
-module finno
+module finnomena
 
 go 1.15
 

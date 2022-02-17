@@ -1,14 +1,22 @@
-# finno
-# How long did you spend on the coding test? What would you add to your solution if you had more time? If you didn't spend much time on the coding test then use this as an opportunity to explain what you would add.
+## Finnomena Recruitment Test
+---
+
+As a user running the application
+
+I can view a list of funds in a user submitted time range (e.g. 1D, 1W, 1M, 1Y)
+
+So that I know which funds are ranked by performance in the selected time range
+<p>&nbsp;</p>  
+ 
+### How to run:
+&nbsp;  
+
+Go to finnomena folder and run command :
+```
+go run main.com 1Y
+```
+
+>**1Y**: Time Range that you want to view a list of funds (1Y, 1M, 1W, 1D)
 
 
-# What was the most useful feature that was added to the latest version of your chosen language? Please include a snippet of code that shows how you've used it.
-
-
-
-# How would you track down a performance issue in production? Have you ever had to do this?
-
-
-
-# How would you improve the FINNOMENA APIs that you just used?
-
+The result will show on your command line.

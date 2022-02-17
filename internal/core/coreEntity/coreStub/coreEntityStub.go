@@ -1,8 +1,8 @@
 package coreStub
 
 import (
-	"finno/internal/core/coreEntity"
-	"finno/internal/core/coreEntity/coreThirdParty"
+	"finnomena/internal/core/coreEntity"
+	"finnomena/internal/core/coreEntity/coreThirdParty"
 )
 
 func NewStubEntity() coreEntity.CoreEntity {

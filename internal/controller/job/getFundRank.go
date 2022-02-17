@@ -2,26 +2,31 @@ package job
 
 import (
 	"context"
-	"finno/internal/controller/job/model"
-	"finno/internal/core/coreEntity"
+	"finnomena/internal/controller/job/model"
+	"finnomena/internal/core/coreEntity"
 	"fmt"
 	"time"
 )
 
-func GetFundRank(ctx context.Context, date string, timeRange string) []model.Fund {
-	fmt.Println(date)
+func GetFundRank(ctx context.Context, date string, timeRange string) ([]model.Fund, error) {
+	fmt.Println("Execute GetFundRank ...")
 	endDate, err := time.Parse("2006-01-02", date)
 	if err != nil {
 		panic(err)
 	}
 	firstDate := FindStartDateFromRange(endDate, timeRange)
-	listOfFunds := coreEntity.Entity().ThirdParty.HTTPFundService.GetFundRanking(ctx, firstDate, endDate)
+	listOfFunds, err := coreEntity.Entity().ThirdParty.HTTPFundService.GetFundRanking(ctx, firstDate, endDate)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, i := range listOfFunds {
 		fmt.Println("===============================================================")
-		fmt.Printf("Name: %s\nRank Of Fund: %f\nUpdated Date: %s\nPerformance: %f\nPrice: %f\n", i.Name, i.RankOfFund, i.UpdatedDate.String(), i.Performance, i.Price)
+		fmt.Printf("Name:\t\t%s\nRank Of Fund:\t%f\nUpdated Date:\t%s\nPerformance:\t%f\nPrice:\t\t%f\n", i.Name, i.RankOfFund, i.UpdatedDate.String(), i.Performance, i.Price)
 	}
 	fmt.Println("===============================================================")
-	return listOfFunds
+
+	return listOfFunds, nil
 }
 
 func FindStartDateFromRange(endDate time.Time, timeRange string) time.Time {

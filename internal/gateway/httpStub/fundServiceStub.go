@@ -2,7 +2,8 @@ package httpStub
 
 import (
 	"context"
-	"finno/internal/controller/job/model"
+	"errors"
+	"finnomena/internal/controller/job/model"
 	"fmt"
 	"sort"
 	"time"
@@ -23,10 +24,11 @@ func NewHTTPGateway() *StubFundService {
 	return stub
 }
 
-func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.Time, endDate time.Time) []model.Fund {
+func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.Time, endDate time.Time) ([]model.Fund, error) {
 	res := repo.fund[endDate.Format("2006-01-02")]
 	if res.Status != true {
 		fmt.Println("The HTTP response status is", res.Status)
+		return nil, errors.New("The HTTP response status is false")
 	}
 	var fundList []model.Fund
 	for _, i := range res.Data {
@@ -46,7 +48,7 @@ func (repo *StubFundService) GetFundRanking(ctx context.Context, startDate time.
 			return fundList[i].Performance > fundList[j].Performance
 		})
 	}
-	return fundList
+	return fundList, nil
 }
 
 func fund() (stub map[string]Response) {
@@ -136,6 +138,14 @@ func fund() (stub map[string]Response) {
 		})
 		rs.Data = fund
 		stub["2021-09-15"] = rs
+	}
+
+	{
+		rs := Response{}
+		rs.Status = false
+		var fund []model.Fund
+		rs.Data = fund
+		stub["2022-03-15"] = rs
 	}
 	return
 }
