@@ -20,6 +20,13 @@ func GetFundRank(ctx context.Context, date string, timeRange string) ([]model.Fu
 		return nil, err
 	}
 
+	if len(listOfFunds) == 0 {
+		fmt.Println("===============================================================")
+		fmt.Printf("No fund in this timeRange(%s)\n", timeRange)
+		fmt.Println("===============================================================")
+		return listOfFunds, nil
+	}
+
 	for _, i := range listOfFunds {
 		fmt.Println("===============================================================")
 		fmt.Printf("Name:\t\t%s\nRank Of Fund:\t%f\nUpdated Date:\t%s\nPerformance:\t%f\nPrice:\t\t%f\n", i.Name, i.RankOfFund, i.UpdatedDate.String(), i.Performance, i.Price)
